@@ -35,12 +35,12 @@ import org.junit.platform.testkit.engine.EngineTestKit;
 
 class TestMultiEnvTestEngine {
 
-  public static final String SEGMENT_TYPE_1 = "test-segment-1";
-  public static final String SEGMENT_TYPE_2 = "test-segment-2";
-  public static final String SEGMENT_TYPE_3 = "test-segment-3";
-  public static final String SEGMENT_TYPE_A = "test-segment-a";
-  public static final String SEGMENT_TYPE_M = "test-segment-m";
-  public static final String SEGMENT_TYPE_Z = "test-segment-z";
+  public static final String DIMENSION_TYPE_1 = "test-segment-1";
+  public static final String DIMENSION_TYPE_2 = "test-segment-2";
+  public static final String DIMENSION_TYPE_3 = "test-segment-3";
+  public static final String DIMENSION_TYPE_A = "test-segment-a";
+  public static final String DIMENSION_TYPE_M = "test-segment-m";
+  public static final String DIMENSION_TYPE_Z = "test-segment-z";
 
   private static final List<UniqueId> PLAIN_TEST_ON_JUPITER_ENGINE_IDS =
       List.of(
@@ -55,22 +55,22 @@ class TestMultiEnvTestEngine {
   private static final List<UniqueId> MULTI_ENV_EXTENSION_2_ON_MULTI_ENV_ENGINE_IDS =
       List.of(
           UniqueId.forEngine(MultiEnvTestEngine.ENGINE_ID)
-              .append(SEGMENT_TYPE_2, TestExtension2.SEGMENT_1)
+              .append(DIMENSION_TYPE_2, TestExtension2.DIMENSION_VALUE_1)
               .append(ClassTestDescriptor.SEGMENT_TYPE, MultiEnvAcceptedTest.class.getName())
               .append(TestMethodTestDescriptor.SEGMENT_TYPE, "test()"),
           UniqueId.forEngine(MultiEnvTestEngine.ENGINE_ID)
-              .append(SEGMENT_TYPE_2, TestExtension2.SEGMENT_1)
+              .append(DIMENSION_TYPE_2, TestExtension2.DIMENSION_VALUE_1)
               .append(ClassTestDescriptor.SEGMENT_TYPE, MultiEnvAcceptedTest.class.getName())
               .append(
                   NestedClassTestDescriptor.SEGMENT_TYPE,
                   MultiEnvAcceptedTest.Inner.class.getSimpleName())
               .append(TestMethodTestDescriptor.SEGMENT_TYPE, "test()"),
           UniqueId.forEngine(MultiEnvTestEngine.ENGINE_ID)
-              .append(SEGMENT_TYPE_2, TestExtension2.SEGMENT_2)
+              .append(DIMENSION_TYPE_2, TestExtension2.DIMENSION_VALUE_2)
               .append(ClassTestDescriptor.SEGMENT_TYPE, MultiEnvAcceptedTest.class.getName())
               .append(TestMethodTestDescriptor.SEGMENT_TYPE, "test()"),
           UniqueId.forEngine(MultiEnvTestEngine.ENGINE_ID)
-              .append(SEGMENT_TYPE_2, TestExtension2.SEGMENT_2)
+              .append(DIMENSION_TYPE_2, TestExtension2.DIMENSION_VALUE_2)
               .append(ClassTestDescriptor.SEGMENT_TYPE, MultiEnvAcceptedTest.class.getName())
               .append(
                   NestedClassTestDescriptor.SEGMENT_TYPE,
@@ -202,26 +202,26 @@ class TestMultiEnvTestEngine {
         List.of(
             // CartesianProductTest1
             UniqueId.forEngine(MultiEnvTestEngine.ENGINE_ID)
-                .append(SEGMENT_TYPE_1, TestExtension1.SEGMENT_1)
-                .append(SEGMENT_TYPE_2, TestExtension2.SEGMENT_1)
+                .append(DIMENSION_TYPE_1, TestExtension1.DIMENSION_VALUE_1)
+                .append(DIMENSION_TYPE_2, TestExtension2.DIMENSION_VALUE_1)
                 .append(ClassTestDescriptor.SEGMENT_TYPE, CartesianProductTest1.class.getName())
                 .append(TestMethodTestDescriptor.SEGMENT_TYPE, "test()"),
             UniqueId.forEngine(MultiEnvTestEngine.ENGINE_ID)
-                .append(SEGMENT_TYPE_1, TestExtension1.SEGMENT_1)
-                .append(SEGMENT_TYPE_2, TestExtension2.SEGMENT_1)
+                .append(DIMENSION_TYPE_1, TestExtension1.DIMENSION_VALUE_1)
+                .append(DIMENSION_TYPE_2, TestExtension2.DIMENSION_VALUE_1)
                 .append(ClassTestDescriptor.SEGMENT_TYPE, CartesianProductTest1.class.getName())
                 .append(
                     NestedClassTestDescriptor.SEGMENT_TYPE,
                     CartesianProductTest1.Inner.class.getSimpleName())
                 .append(TestMethodTestDescriptor.SEGMENT_TYPE, "test()"),
             UniqueId.forEngine(MultiEnvTestEngine.ENGINE_ID)
-                .append(SEGMENT_TYPE_1, TestExtension1.SEGMENT_1)
-                .append(SEGMENT_TYPE_2, TestExtension2.SEGMENT_2)
+                .append(DIMENSION_TYPE_1, TestExtension1.DIMENSION_VALUE_1)
+                .append(DIMENSION_TYPE_2, TestExtension2.DIMENSION_VALUE_2)
                 .append(ClassTestDescriptor.SEGMENT_TYPE, CartesianProductTest1.class.getName())
                 .append(TestMethodTestDescriptor.SEGMENT_TYPE, "test()"),
             UniqueId.forEngine(MultiEnvTestEngine.ENGINE_ID)
-                .append(SEGMENT_TYPE_1, TestExtension1.SEGMENT_1)
-                .append(SEGMENT_TYPE_2, TestExtension2.SEGMENT_2)
+                .append(DIMENSION_TYPE_1, TestExtension1.DIMENSION_VALUE_1)
+                .append(DIMENSION_TYPE_2, TestExtension2.DIMENSION_VALUE_2)
                 .append(ClassTestDescriptor.SEGMENT_TYPE, CartesianProductTest1.class.getName())
                 .append(
                     NestedClassTestDescriptor.SEGMENT_TYPE,
@@ -230,90 +230,90 @@ class TestMultiEnvTestEngine {
 
             // CartesianProductTest2
             UniqueId.forEngine(MultiEnvTestEngine.ENGINE_ID)
-                .append(SEGMENT_TYPE_1, TestExtension1.SEGMENT_1)
-                .append(SEGMENT_TYPE_2, TestExtension2.SEGMENT_1)
-                .append(SEGMENT_TYPE_3, TestExtension3.SEGMENT_1)
+                .append(DIMENSION_TYPE_1, TestExtension1.DIMENSION_VALUE_1)
+                .append(DIMENSION_TYPE_2, TestExtension2.DIMENSION_VALUE_1)
+                .append(DIMENSION_TYPE_3, TestExtension3.DIMENSION_VALUE_1)
                 .append(ClassTestDescriptor.SEGMENT_TYPE, CartesianProductTest2.class.getName())
                 .append(TestMethodTestDescriptor.SEGMENT_TYPE, "test()"),
             UniqueId.forEngine(MultiEnvTestEngine.ENGINE_ID)
-                .append(SEGMENT_TYPE_1, TestExtension1.SEGMENT_1)
-                .append(SEGMENT_TYPE_2, TestExtension2.SEGMENT_1)
-                .append(SEGMENT_TYPE_3, TestExtension3.SEGMENT_1)
-                .append(ClassTestDescriptor.SEGMENT_TYPE, CartesianProductTest2.class.getName())
-                .append(
-                    NestedClassTestDescriptor.SEGMENT_TYPE,
-                    CartesianProductTest2.Inner.class.getSimpleName())
-                .append(TestMethodTestDescriptor.SEGMENT_TYPE, "test()"),
-            UniqueId.forEngine(MultiEnvTestEngine.ENGINE_ID)
-                .append(SEGMENT_TYPE_1, TestExtension1.SEGMENT_1)
-                .append(SEGMENT_TYPE_2, TestExtension2.SEGMENT_1)
-                .append(SEGMENT_TYPE_3, TestExtension3.SEGMENT_2)
-                .append(ClassTestDescriptor.SEGMENT_TYPE, CartesianProductTest2.class.getName())
-                .append(TestMethodTestDescriptor.SEGMENT_TYPE, "test()"),
-            UniqueId.forEngine(MultiEnvTestEngine.ENGINE_ID)
-                .append(SEGMENT_TYPE_1, TestExtension1.SEGMENT_1)
-                .append(SEGMENT_TYPE_2, TestExtension2.SEGMENT_1)
-                .append(SEGMENT_TYPE_3, TestExtension3.SEGMENT_2)
+                .append(DIMENSION_TYPE_1, TestExtension1.DIMENSION_VALUE_1)
+                .append(DIMENSION_TYPE_2, TestExtension2.DIMENSION_VALUE_1)
+                .append(DIMENSION_TYPE_3, TestExtension3.DIMENSION_VALUE_1)
                 .append(ClassTestDescriptor.SEGMENT_TYPE, CartesianProductTest2.class.getName())
                 .append(
                     NestedClassTestDescriptor.SEGMENT_TYPE,
                     CartesianProductTest2.Inner.class.getSimpleName())
                 .append(TestMethodTestDescriptor.SEGMENT_TYPE, "test()"),
             UniqueId.forEngine(MultiEnvTestEngine.ENGINE_ID)
-                .append(SEGMENT_TYPE_1, TestExtension1.SEGMENT_1)
-                .append(SEGMENT_TYPE_2, TestExtension2.SEGMENT_1)
-                .append(SEGMENT_TYPE_3, TestExtension3.SEGMENT_3)
+                .append(DIMENSION_TYPE_1, TestExtension1.DIMENSION_VALUE_1)
+                .append(DIMENSION_TYPE_2, TestExtension2.DIMENSION_VALUE_1)
+                .append(DIMENSION_TYPE_3, TestExtension3.DIMENSION_VALUE_2)
                 .append(ClassTestDescriptor.SEGMENT_TYPE, CartesianProductTest2.class.getName())
                 .append(TestMethodTestDescriptor.SEGMENT_TYPE, "test()"),
             UniqueId.forEngine(MultiEnvTestEngine.ENGINE_ID)
-                .append(SEGMENT_TYPE_1, TestExtension1.SEGMENT_1)
-                .append(SEGMENT_TYPE_2, TestExtension2.SEGMENT_1)
-                .append(SEGMENT_TYPE_3, TestExtension3.SEGMENT_3)
-                .append(ClassTestDescriptor.SEGMENT_TYPE, CartesianProductTest2.class.getName())
-                .append(
-                    NestedClassTestDescriptor.SEGMENT_TYPE,
-                    CartesianProductTest2.Inner.class.getSimpleName())
-                .append(TestMethodTestDescriptor.SEGMENT_TYPE, "test()"),
-            UniqueId.forEngine(MultiEnvTestEngine.ENGINE_ID)
-                .append(SEGMENT_TYPE_1, TestExtension1.SEGMENT_1)
-                .append(SEGMENT_TYPE_2, TestExtension2.SEGMENT_2)
-                .append(SEGMENT_TYPE_3, TestExtension3.SEGMENT_1)
-                .append(ClassTestDescriptor.SEGMENT_TYPE, CartesianProductTest2.class.getName())
-                .append(TestMethodTestDescriptor.SEGMENT_TYPE, "test()"),
-            UniqueId.forEngine(MultiEnvTestEngine.ENGINE_ID)
-                .append(SEGMENT_TYPE_1, TestExtension1.SEGMENT_1)
-                .append(SEGMENT_TYPE_2, TestExtension2.SEGMENT_2)
-                .append(SEGMENT_TYPE_3, TestExtension3.SEGMENT_1)
+                .append(DIMENSION_TYPE_1, TestExtension1.DIMENSION_VALUE_1)
+                .append(DIMENSION_TYPE_2, TestExtension2.DIMENSION_VALUE_1)
+                .append(DIMENSION_TYPE_3, TestExtension3.DIMENSION_VALUE_2)
                 .append(ClassTestDescriptor.SEGMENT_TYPE, CartesianProductTest2.class.getName())
                 .append(
                     NestedClassTestDescriptor.SEGMENT_TYPE,
                     CartesianProductTest2.Inner.class.getSimpleName())
                 .append(TestMethodTestDescriptor.SEGMENT_TYPE, "test()"),
             UniqueId.forEngine(MultiEnvTestEngine.ENGINE_ID)
-                .append(SEGMENT_TYPE_1, TestExtension1.SEGMENT_1)
-                .append(SEGMENT_TYPE_2, TestExtension2.SEGMENT_2)
-                .append(SEGMENT_TYPE_3, TestExtension3.SEGMENT_2)
+                .append(DIMENSION_TYPE_1, TestExtension1.DIMENSION_VALUE_1)
+                .append(DIMENSION_TYPE_2, TestExtension2.DIMENSION_VALUE_1)
+                .append(DIMENSION_TYPE_3, TestExtension3.DIMENSION_VALUE_3)
                 .append(ClassTestDescriptor.SEGMENT_TYPE, CartesianProductTest2.class.getName())
                 .append(TestMethodTestDescriptor.SEGMENT_TYPE, "test()"),
             UniqueId.forEngine(MultiEnvTestEngine.ENGINE_ID)
-                .append(SEGMENT_TYPE_1, TestExtension1.SEGMENT_1)
-                .append(SEGMENT_TYPE_2, TestExtension2.SEGMENT_2)
-                .append(SEGMENT_TYPE_3, TestExtension3.SEGMENT_2)
+                .append(DIMENSION_TYPE_1, TestExtension1.DIMENSION_VALUE_1)
+                .append(DIMENSION_TYPE_2, TestExtension2.DIMENSION_VALUE_1)
+                .append(DIMENSION_TYPE_3, TestExtension3.DIMENSION_VALUE_3)
                 .append(ClassTestDescriptor.SEGMENT_TYPE, CartesianProductTest2.class.getName())
                 .append(
                     NestedClassTestDescriptor.SEGMENT_TYPE,
                     CartesianProductTest2.Inner.class.getSimpleName())
                 .append(TestMethodTestDescriptor.SEGMENT_TYPE, "test()"),
             UniqueId.forEngine(MultiEnvTestEngine.ENGINE_ID)
-                .append(SEGMENT_TYPE_1, TestExtension1.SEGMENT_1)
-                .append(SEGMENT_TYPE_2, TestExtension2.SEGMENT_2)
-                .append(SEGMENT_TYPE_3, TestExtension3.SEGMENT_3)
+                .append(DIMENSION_TYPE_1, TestExtension1.DIMENSION_VALUE_1)
+                .append(DIMENSION_TYPE_2, TestExtension2.DIMENSION_VALUE_2)
+                .append(DIMENSION_TYPE_3, TestExtension3.DIMENSION_VALUE_1)
                 .append(ClassTestDescriptor.SEGMENT_TYPE, CartesianProductTest2.class.getName())
                 .append(TestMethodTestDescriptor.SEGMENT_TYPE, "test()"),
             UniqueId.forEngine(MultiEnvTestEngine.ENGINE_ID)
-                .append(SEGMENT_TYPE_1, TestExtension1.SEGMENT_1)
-                .append(SEGMENT_TYPE_2, TestExtension2.SEGMENT_2)
-                .append(SEGMENT_TYPE_3, TestExtension3.SEGMENT_3)
+                .append(DIMENSION_TYPE_1, TestExtension1.DIMENSION_VALUE_1)
+                .append(DIMENSION_TYPE_2, TestExtension2.DIMENSION_VALUE_2)
+                .append(DIMENSION_TYPE_3, TestExtension3.DIMENSION_VALUE_1)
+                .append(ClassTestDescriptor.SEGMENT_TYPE, CartesianProductTest2.class.getName())
+                .append(
+                    NestedClassTestDescriptor.SEGMENT_TYPE,
+                    CartesianProductTest2.Inner.class.getSimpleName())
+                .append(TestMethodTestDescriptor.SEGMENT_TYPE, "test()"),
+            UniqueId.forEngine(MultiEnvTestEngine.ENGINE_ID)
+                .append(DIMENSION_TYPE_1, TestExtension1.DIMENSION_VALUE_1)
+                .append(DIMENSION_TYPE_2, TestExtension2.DIMENSION_VALUE_2)
+                .append(DIMENSION_TYPE_3, TestExtension3.DIMENSION_VALUE_2)
+                .append(ClassTestDescriptor.SEGMENT_TYPE, CartesianProductTest2.class.getName())
+                .append(TestMethodTestDescriptor.SEGMENT_TYPE, "test()"),
+            UniqueId.forEngine(MultiEnvTestEngine.ENGINE_ID)
+                .append(DIMENSION_TYPE_1, TestExtension1.DIMENSION_VALUE_1)
+                .append(DIMENSION_TYPE_2, TestExtension2.DIMENSION_VALUE_2)
+                .append(DIMENSION_TYPE_3, TestExtension3.DIMENSION_VALUE_2)
+                .append(ClassTestDescriptor.SEGMENT_TYPE, CartesianProductTest2.class.getName())
+                .append(
+                    NestedClassTestDescriptor.SEGMENT_TYPE,
+                    CartesianProductTest2.Inner.class.getSimpleName())
+                .append(TestMethodTestDescriptor.SEGMENT_TYPE, "test()"),
+            UniqueId.forEngine(MultiEnvTestEngine.ENGINE_ID)
+                .append(DIMENSION_TYPE_1, TestExtension1.DIMENSION_VALUE_1)
+                .append(DIMENSION_TYPE_2, TestExtension2.DIMENSION_VALUE_2)
+                .append(DIMENSION_TYPE_3, TestExtension3.DIMENSION_VALUE_3)
+                .append(ClassTestDescriptor.SEGMENT_TYPE, CartesianProductTest2.class.getName())
+                .append(TestMethodTestDescriptor.SEGMENT_TYPE, "test()"),
+            UniqueId.forEngine(MultiEnvTestEngine.ENGINE_ID)
+                .append(DIMENSION_TYPE_1, TestExtension1.DIMENSION_VALUE_1)
+                .append(DIMENSION_TYPE_2, TestExtension2.DIMENSION_VALUE_2)
+                .append(DIMENSION_TYPE_3, TestExtension3.DIMENSION_VALUE_3)
                 .append(ClassTestDescriptor.SEGMENT_TYPE, CartesianProductTest2.class.getName())
                 .append(
                     NestedClassTestDescriptor.SEGMENT_TYPE,
@@ -344,15 +344,15 @@ class TestMultiEnvTestEngine {
     List<UniqueId> expectedIds =
         List.of(
             UniqueId.forEngine(MultiEnvTestEngine.ENGINE_ID)
-                .append(SEGMENT_TYPE_M, MmmOrderedTestExtension.SEGMENT_1)
-                .append(SEGMENT_TYPE_A, AaaOrderedTestExtension.SEGMENT_1)
-                .append(SEGMENT_TYPE_Z, ZzzOrderedTestExtension.SEGMENT_1)
+                .append(DIMENSION_TYPE_M, MmmOrderedTestExtension.DIMENSION_VALUE_1)
+                .append(DIMENSION_TYPE_A, AaaOrderedTestExtension.DIMENSION_VALUE_1)
+                .append(DIMENSION_TYPE_Z, ZzzOrderedTestExtension.DIMENSION_VALUE_1)
                 .append(ClassTestDescriptor.SEGMENT_TYPE, OrderedTest.class.getName())
                 .append(TestMethodTestDescriptor.SEGMENT_TYPE, "test()"),
             UniqueId.forEngine(MultiEnvTestEngine.ENGINE_ID)
-                .append(SEGMENT_TYPE_M, MmmOrderedTestExtension.SEGMENT_1)
-                .append(SEGMENT_TYPE_A, AaaOrderedTestExtension.SEGMENT_1)
-                .append(SEGMENT_TYPE_Z, ZzzOrderedTestExtension.SEGMENT_1)
+                .append(DIMENSION_TYPE_M, MmmOrderedTestExtension.DIMENSION_VALUE_1)
+                .append(DIMENSION_TYPE_A, AaaOrderedTestExtension.DIMENSION_VALUE_1)
+                .append(DIMENSION_TYPE_Z, ZzzOrderedTestExtension.DIMENSION_VALUE_1)
                 .append(ClassTestDescriptor.SEGMENT_TYPE, OrderedTest.class.getName())
                 .append(
                     NestedClassTestDescriptor.SEGMENT_TYPE, OrderedTest.Inner.class.getSimpleName())
@@ -385,14 +385,14 @@ class TestMultiEnvTestEngine {
         List.of(
             String.format(
                 "test1() [%s,%s,%s]",
-                MmmOrderedTestExtension.SEGMENT_1,
-                AaaOrderedTestExtension.SEGMENT_1,
-                ZzzOrderedTestExtension.SEGMENT_1),
+                MmmOrderedTestExtension.DIMENSION_VALUE_1,
+                AaaOrderedTestExtension.DIMENSION_VALUE_1,
+                ZzzOrderedTestExtension.DIMENSION_VALUE_1),
             String.format(
                 "test2() [%s,%s,%s]",
-                MmmOrderedTestExtension.SEGMENT_1,
-                AaaOrderedTestExtension.SEGMENT_1,
-                ZzzOrderedTestExtension.SEGMENT_1));
+                MmmOrderedTestExtension.DIMENSION_VALUE_1,
+                AaaOrderedTestExtension.DIMENSION_VALUE_1,
+                ZzzOrderedTestExtension.DIMENSION_VALUE_1));
 
     assertThat(uniqueTestNames).containsExactlyInAnyOrderElementsOf(expectedDisplayNames);
   }
@@ -521,56 +521,56 @@ class TestMultiEnvTestEngine {
     }
   }
 
-  @MultiEnvSegmentType(SEGMENT_TYPE_1)
+  @MultiEnvDimensionType(DIMENSION_TYPE_1)
   public static class TestExtension1 implements MultiEnvTestExtension {
-    public static final String SEGMENT_1 = "TE1-1";
+    public static final String DIMENSION_VALUE_1 = "TE1-1";
 
     @Override
-    public List<String> allEnvironmentIds(ConfigurationParameters configuration) {
-      return List.of(SEGMENT_1);
+    public List<String> allDimensionValues(ConfigurationParameters configuration) {
+      return List.of(DIMENSION_VALUE_1);
     }
   }
 
-  @MultiEnvSegmentType(SEGMENT_TYPE_2)
+  @MultiEnvDimensionType(DIMENSION_TYPE_2)
   public static class TestExtension2 implements MultiEnvTestExtension {
-    public static final String SEGMENT_1 = "TE2-1";
-    public static final String SEGMENT_2 = "TE2-2";
+    public static final String DIMENSION_VALUE_1 = "TE2-1";
+    public static final String DIMENSION_VALUE_2 = "TE2-2";
 
     @Override
-    public List<String> allEnvironmentIds(ConfigurationParameters configuration) {
-      return Arrays.asList(SEGMENT_1, SEGMENT_2);
+    public List<String> allDimensionValues(ConfigurationParameters configuration) {
+      return Arrays.asList(DIMENSION_VALUE_1, DIMENSION_VALUE_2);
     }
   }
 
-  @MultiEnvSegmentType(SEGMENT_TYPE_3)
+  @MultiEnvDimensionType(DIMENSION_TYPE_3)
   public static class TestExtension3 implements MultiEnvTestExtension {
-    public static final String SEGMENT_1 = "TE3-1";
-    public static final String SEGMENT_2 = "TE3-2";
-    public static final String SEGMENT_3 = "TE3-3";
+    public static final String DIMENSION_VALUE_1 = "TE3-1";
+    public static final String DIMENSION_VALUE_2 = "TE3-2";
+    public static final String DIMENSION_VALUE_3 = "TE3-3";
 
     @Override
-    public List<String> allEnvironmentIds(ConfigurationParameters configuration) {
-      return Arrays.asList(SEGMENT_1, SEGMENT_2, SEGMENT_3);
+    public List<String> allDimensionValues(ConfigurationParameters configuration) {
+      return Arrays.asList(DIMENSION_VALUE_1, DIMENSION_VALUE_2, DIMENSION_VALUE_3);
     }
   }
 
-  @MultiEnvSegmentType(SEGMENT_TYPE_A)
+  @MultiEnvDimensionType(DIMENSION_TYPE_A)
   public static class AaaOrderedTestExtension implements MultiEnvTestExtension {
-    public static final String SEGMENT_1 = "aaa";
+    public static final String DIMENSION_VALUE_1 = "aaa";
 
     @Override
-    public List<String> allEnvironmentIds(ConfigurationParameters configuration) {
-      return List.of(SEGMENT_1);
+    public List<String> allDimensionValues(ConfigurationParameters configuration) {
+      return List.of(DIMENSION_VALUE_1);
     }
   }
 
-  @MultiEnvSegmentType(SEGMENT_TYPE_M)
+  @MultiEnvDimensionType(DIMENSION_TYPE_M)
   public static class MmmOrderedTestExtension implements MultiEnvTestExtension {
-    public static final String SEGMENT_1 = "mmm";
+    public static final String DIMENSION_VALUE_1 = "mmm";
 
     @Override
-    public List<String> allEnvironmentIds(ConfigurationParameters configuration) {
-      return List.of(SEGMENT_1);
+    public List<String> allDimensionValues(ConfigurationParameters configuration) {
+      return List.of(DIMENSION_VALUE_1);
     }
 
     @Override
@@ -579,13 +579,13 @@ class TestMultiEnvTestEngine {
     }
   }
 
-  @MultiEnvSegmentType(SEGMENT_TYPE_Z)
+  @MultiEnvDimensionType(DIMENSION_TYPE_Z)
   public static class ZzzOrderedTestExtension implements MultiEnvTestExtension {
-    public static final String SEGMENT_1 = "zzz";
+    public static final String DIMENSION_VALUE_1 = "zzz";
 
     @Override
-    public List<String> allEnvironmentIds(ConfigurationParameters configuration) {
-      return List.of(SEGMENT_1);
+    public List<String> allDimensionValues(ConfigurationParameters configuration) {
+      return List.of(DIMENSION_VALUE_1);
     }
   }
 }

@@ -24,14 +24,14 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.platform.commons.util.AnnotationUtils;
 import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.UniqueId;
-import org.projectnessie.junit.engine.MultiEnvSegmentType;
+import org.projectnessie.junit.engine.MultiEnvDimensionType;
 import org.projectnessie.junit.engine.MultiEnvTestExtension;
 
 /**
  * Runs the related suite of tests for several Nessie API versions as specified by the {@link
  * NessieApiVersions} annotation.
  */
-@MultiEnvSegmentType(MultiVersionApiTest.API_VERSION_SEGMENT_TYPE)
+@MultiEnvDimensionType(MultiVersionApiTest.API_VERSION_SEGMENT_TYPE)
 public class MultiVersionApiTest implements MultiEnvTestExtension, ExecutionCondition {
   public static final String API_VERSION_SEGMENT_TYPE = "nessie-api";
 
@@ -39,7 +39,7 @@ public class MultiVersionApiTest implements MultiEnvTestExtension, ExecutionCond
   private static final NessieApiVersion DEFAULT_API_VERSION = NessieApiVersion.V2;
 
   @Override
-  public List<String> allEnvironmentIds(ConfigurationParameters configuration) {
+  public List<String> allDimensionValues(ConfigurationParameters configuration) {
     return Arrays.stream(NessieApiVersion.values()).map(Enum::name).collect(Collectors.toList());
   }
 

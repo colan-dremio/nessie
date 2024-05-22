@@ -22,26 +22,29 @@ import org.junit.platform.engine.ConfigurationParameters;
 /**
  * Interface for JUnit5 test extensions that require running the same suite of tests in multiple
  * executions environments. For example, running the same tests for multiple versions of a Nessie
- * Client.<br>
- * <br>
- * Implementations must declare a {@link MultiEnvSegmentType} with the name of the type of their
- * Junit UniqueID segment.<br>
+ * Client.
+ *
+ * <p>Implementations must declare a {@link MultiEnvDimensionType} with the name of the type of their
+ * Junit UniqueID segment.
+ *
+ * <p>See {@link MultiEnvTestEngine}.
  */
 public interface MultiEnvTestExtension extends Extension {
 
   /**
-   * Returns a list of IDs for test environments where the related suite of tests needs to be
-   * executed.
+   * Returns a list of dimension values where the related suite of tests needs to be
+   * executed. For example, a dimension of Nessie server version might have values of
+   * [0.80.0, 0.81.0, 0.82.0].
    *
    * <p>The returned list should preferably have the same order of elements across different
    * invocations of this method to ensure a stable test case creation order.
    */
-  List<String> allEnvironmentIds(ConfigurationParameters configuration);
+  List<String> allDimensionValues(ConfigurationParameters configuration);
 
   /**
    * Allows {@link MultiEnvTestExtension}s to define their relative ordering within a JUnit
-   * UniqueID's segments. Higher numbers will appear earlier in the JUnit UniqueId. Extensions with
-   * the same segment priority will be sorted alphabetically by segmentType.
+   * UniqueId's segments. Higher numbers will appear earlier in the JUnit UniqueId. Extensions with
+   * the same segment priority will be sorted alphabetically by {@link MultiEnvDimensionType}.
    */
   default int segmentPriority() {
     return 0;

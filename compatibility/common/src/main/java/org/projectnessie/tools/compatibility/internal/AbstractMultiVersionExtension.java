@@ -39,7 +39,7 @@ import org.junit.platform.commons.util.AnnotationUtils;
 import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.UniqueId.Segment;
-import org.projectnessie.junit.engine.MultiEnvSegmentType;
+import org.projectnessie.junit.engine.MultiEnvDimensionType;
 import org.projectnessie.junit.engine.MultiEnvTestExtension;
 import org.projectnessie.tools.compatibility.api.NessieVersion;
 import org.projectnessie.tools.compatibility.api.Version;
@@ -50,7 +50,7 @@ import org.projectnessie.tools.compatibility.api.VersionCondition;
  *
  * <p>Implements extension to handle {@link VersionCondition}.
  */
-@MultiEnvSegmentType(AbstractMultiVersionExtension.NESSIE_VERSION_SEGMENT_TYPE)
+@MultiEnvDimensionType(AbstractMultiVersionExtension.NESSIE_VERSION_SEGMENT_TYPE)
 abstract class AbstractMultiVersionExtension
     implements BeforeAllCallback, BeforeEachCallback, ExecutionCondition, MultiEnvTestExtension {
 
@@ -59,7 +59,7 @@ abstract class AbstractMultiVersionExtension
   private static final ConditionEvaluationResult PASS = enabled(null);
 
   @Override
-  public List<String> allEnvironmentIds(ConfigurationParameters configuration) {
+  public List<String> allDimensionValues(ConfigurationParameters configuration) {
     try {
       return VersionsToExercise.versionsForEngine(configuration).stream()
           .map(Objects::toString)

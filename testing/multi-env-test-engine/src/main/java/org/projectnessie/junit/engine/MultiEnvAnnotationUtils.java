@@ -45,20 +45,20 @@ public final class MultiEnvAnnotationUtils {
         .map(e -> (Class<? extends MultiEnvTestExtension>) e);
   }
 
-  public static String segmentTypeOf(Class<? extends MultiEnvTestExtension> extensionClass) {
-    MultiEnvSegmentType segmentTypeAnnotation =
-        extensionClass.getAnnotation(MultiEnvSegmentType.class);
+  public static String dimensionTypeOf(Class<? extends MultiEnvTestExtension> extensionClass) {
+    MultiEnvDimensionType dimensionTypeAnnotation =
+        extensionClass.getAnnotation(MultiEnvDimensionType.class);
 
-    if (segmentTypeAnnotation == null) {
+    if (dimensionTypeAnnotation == null) {
       throw new IllegalStateException(
           String.format(
-              "%s is missing a MultiEnvSegmentType annotation.", extensionClass.getName()));
+              "%s is missing a MultiEnvDimensionType annotation.", extensionClass.getName()));
     }
 
-    return segmentTypeAnnotation.value();
+    return dimensionTypeAnnotation.value();
   }
 
-  public static String segmentTypeOf(MultiEnvTestExtension extension) {
-    return segmentTypeOf(extension.getClass());
+  public static String dimensionTypeOf(MultiEnvTestExtension extension) {
+    return dimensionTypeOf(extension.getClass());
   }
 }

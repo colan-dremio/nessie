@@ -50,7 +50,7 @@ public class MultiEnvTestFilter implements PostDiscoveryFilter {
     boolean isJunitEngine = id.getEngineId().map("junit-jupiter"::equals).orElse(false);
     boolean isMultiEnvTest =
         findMultiEnvTestExtensionsOn(testClass)
-            .map(MultiEnvAnnotationUtils::segmentTypeOf)
+            .map(MultiEnvAnnotationUtils::dimensionTypeOf)
             .findAny()
             .isPresent();
 

@@ -18,6 +18,10 @@ package org.projectnessie.junit.engine;
 import java.lang.reflect.Method;
 import org.junit.jupiter.api.DisplayNameGenerator;
 
+/**
+ * Adds environment information as a suffix to the test name. This is important for tools that do
+ * not directly process the JUnit UniqueId.
+ */
 public class MultiEnvDisplayNameGenerator implements DisplayNameGenerator {
 
   private final DisplayNameGenerator delegate;

@@ -15,7 +15,7 @@
  */
 package org.projectnessie.junit.engine;
 
-import static org.projectnessie.junit.engine.MultiEnvAnnotationUtils.segmentTypeOf;
+import static org.projectnessie.junit.engine.MultiEnvAnnotationUtils.dimensionTypeOf;
 
 import com.google.common.collect.ListMultimap;
 import com.google.common.collect.MultimapBuilder;
@@ -48,29 +48,30 @@ import org.slf4j.LoggerFactory;
  * This is a JUnit5 Test Engine that delegates test discovery to {@link JupiterTestEngine} and
  * replicates the discovered tests for execution in multiple test environments.
  *
- * <p>When multiple {@link MultiEnvTestExtension}s are applied to the same test, performs a
- * cartesian product of available environments and their IDs.
+ * <p>Each {@link MultiEnvTestExtension} defines a dimension on which to expand. When multiple
+ * {@link MultiEnvTestExtension}s are applied to the same test, the engine performs a
+ * cartesian product of applied dimension types.
  *
- * <p>For example:
- *
- * <ul>
- *   <li>MultiEnvTestExtension segmentA with IDs 1, 2, 3
- *   <li>MultiEnvTestExtension segmentB with IDs 1, 2
- *   <li>MultiEnvTestExtension segmentC with ID 1
- * </ul>
- *
- * will result in the following IDs:
+ * <p>For example, a test class annotated with these {@link MultiEnvTestExtension}s:
  *
  * <ul>
- *   <li>[engine:nessie-multi-env][segmentA:1][segmentB:1][segmentC:1]
- *   <li>[engine:nessie-multi-env][segmentA:1][segmentB:2][segmentC:1]
- *   <li>[engine:nessie-multi-env][segmentA:2][segmentB:1][segmentC:1]
- *   <li>[engine:nessie-multi-env][segmentA:2][segmentB:2][segmentC:1]
- *   <li>[engine:nessie-multi-env][segmentA:3][segmentB:1][segmentC:1]
- *   <li>[engine:nessie-multi-env][segmentA:3][segmentB:2][segmentC:1]
+ *   <li>ExtensionA with dimension type "dimensionA" and dimension values [1, 2, 3]
+ *   <li>ExtensionB with dimension type "dimensionA" and dimension values [1, 2]
+ *   <li>ExtensionC with dimension type "dimensionA" and dimension values [1]
  * </ul>
  *
- * <p>Actual test environments are expected to be managed by JUnit 5 extensions, implementing the
+ * will result in the following tests with JUnit UniqueIds:
+ *
+ * <ul>
+ *   <li>[engine:nessie-multi-env][dimensionA:1][dimensionB:1][dimensionC:1][class:testClass]
+ *   <li>[engine:nessie-multi-env][dimensionA:1][dimensionB:2][dimensionC:1][class:testClass]
+ *   <li>[engine:nessie-multi-env][dimensionA:2][dimensionB:1][dimensionC:1][class:testClass]
+ *   <li>[engine:nessie-multi-env][dimensionA:2][dimensionB:2][dimensionC:1][class:testClass]
+ *   <li>[engine:nessie-multi-env][dimensionA:3][dimensionB:1][dimensionC:1][class:testClass]
+ *   <li>[engine:nessie-multi-env][dimensionA:3][dimensionB:2][dimensionC:1][class:testClass]
+ * </ul>
+ *
+ * <p>Actual test environments are expected to be managed by JUnit 5 extensions implementing the
  * {@link MultiEnvTestExtension} interface.
  */
 public class MultiEnvTestEngine implements TestEngine {
@@ -79,7 +80,7 @@ public class MultiEnvTestEngine implements TestEngine {
 
   public static final String ENGINE_ID = "nessie-multi-env";
 
-  private static final SegmentTypes ROOT_KEY = new SegmentTypes(Collections.emptyList());
+  private static final DimensionTypes ROOT_KEY = new DimensionTypes(Collections.emptyList());
   private static final MultiEnvExtensionRegistry registry = new MultiEnvExtensionRegistry();
   private static final boolean FAIL_ON_MISSING_ENVIRONMENTS =
       !Boolean.getBoolean("org.projectnessie.junit.engine.ignore-empty-environments");
@@ -102,10 +103,10 @@ public class MultiEnvTestEngine implements TestEngine {
       TestDescriptor originalRoot = delegate.discover(discoveryRequest, uniqueId);
       List<TestDescriptor> originalChildren = new ArrayList<>(originalRoot.getChildren());
 
-      AtomicBoolean foundAtLeastOneEnvironmentId = new AtomicBoolean();
+      AtomicBoolean foundAtLeastOneDimensionType = new AtomicBoolean();
       List<String> processedExtensionNames = new ArrayList<>();
 
-      ListMultimap<SegmentTypes, TestDescriptor> nodeCache =
+      ListMultimap<DimensionTypes, TestDescriptor> nodeCache =
           MultimapBuilder.hashKeys().arrayListValues().build();
       nodeCache.put(ROOT_KEY, originalRoot);
 
@@ -122,7 +123,7 @@ public class MultiEnvTestEngine implements TestEngine {
                       .sorted(
                           Comparator.comparing(MultiEnvTestExtension::segmentPriority)
                               .reversed()
-                              .thenComparing(MultiEnvAnnotationUtils::segmentTypeOf))
+                              .thenComparing(MultiEnvAnnotationUtils::dimensionTypeOf))
                       .collect(Collectors.toList());
 
               if (orderedMultiEnvExtensionsOnTest.isEmpty()) {
@@ -133,20 +134,20 @@ public class MultiEnvTestEngine implements TestEngine {
               // Multiple nodes will exist at a given level - one for each combination of possible
               // environment IDs (including expanding parent nodes).
               List<TestDescriptor> parentNodes;
-              SegmentTypes currentPosition = ROOT_KEY;
+              DimensionTypes currentPosition = ROOT_KEY;
               for (MultiEnvTestExtension extension : orderedMultiEnvExtensionsOnTest) {
                 processedExtensionNames.add(extension.getClass().getSimpleName());
                 parentNodes = nodeCache.get(currentPosition);
-                currentPosition = currentPosition.append(segmentTypeOf(extension));
+                currentPosition = currentPosition.append(dimensionTypeOf(extension));
 
                 for (TestDescriptor parentNode : parentNodes) {
-                  for (String environmentId :
-                      extension.allEnvironmentIds(discoveryRequest.getConfigurationParameters())) {
-                    foundAtLeastOneEnvironmentId.set(true);
+                  for (String dimensionValue :
+                      extension.allDimensionValues(discoveryRequest.getConfigurationParameters())) {
+                    foundAtLeastOneDimensionType.set(true);
                     UniqueId newId =
-                        parentNode.getUniqueId().append(segmentTypeOf(extension), environmentId);
+                        parentNode.getUniqueId().append(dimensionTypeOf(extension), dimensionValue);
                     MultiEnvTestDescriptor newChild =
-                        new MultiEnvTestDescriptor(newId, environmentId);
+                        new MultiEnvTestDescriptor(newId, dimensionValue);
                     parentNode.addChild(newChild);
                     nodeCache.put(currentPosition, newChild);
                   }
@@ -154,16 +155,16 @@ public class MultiEnvTestEngine implements TestEngine {
               }
 
               // Add this test into each known node at the current level
-              List<String> currentSegmentTypes = currentPosition.get();
+              List<String> currentDimensionTypes = currentPosition.get();
               for (TestDescriptor nodeAtCurrentPosition : nodeCache.get(currentPosition)) {
-                String environmentNames =
+                String currentDimensionValues =
                     nodeAtCurrentPosition.getUniqueId().getSegments().stream()
-                        .filter(s -> currentSegmentTypes.contains(s.getType()))
+                        .filter(s -> currentDimensionTypes.contains(s.getType()))
                         .map(Segment::getValue)
                         .collect(Collectors.joining(","));
 
                 putTestIntoParent(
-                    testDescriptor, nodeAtCurrentPosition, environmentNames, discoveryRequest);
+                    testDescriptor, nodeAtCurrentPosition, currentDimensionValues, discoveryRequest);
               }
             }
           });
@@ -173,7 +174,7 @@ public class MultiEnvTestEngine implements TestEngine {
 
       if (FAIL_ON_MISSING_ENVIRONMENTS
           && !processedExtensionNames.isEmpty()
-          && !foundAtLeastOneEnvironmentId.get()) {
+          && !foundAtLeastOneDimensionType.get()) {
         throw new IllegalStateException(
             String.format(
                 "%s was enabled, but test extensions %s did not discover any environment IDs.",
@@ -199,11 +200,11 @@ public class MultiEnvTestEngine implements TestEngine {
   }
 
   /** Immutable key of segment types for the intermediate cartesian product tree. */
-  private static class SegmentTypes {
+  private static class DimensionTypes {
 
     private final List<String> components;
 
-    public SegmentTypes(List<String> components) {
+    public DimensionTypes(List<String> components) {
       this.components = components;
     }
 
@@ -211,10 +212,10 @@ public class MultiEnvTestEngine implements TestEngine {
       return new ArrayList<>(components);
     }
 
-    public SegmentTypes append(String component) {
+    public DimensionTypes append(String component) {
       List<String> newComponents = new ArrayList<>(components);
       newComponents.add(component);
-      return new SegmentTypes(newComponents);
+      return new DimensionTypes(newComponents);
     }
 
     @Override
@@ -226,8 +227,8 @@ public class MultiEnvTestEngine implements TestEngine {
     public boolean equals(Object o) {
       if (this == o) return true;
       if (o == null || getClass() != o.getClass()) return false;
-      SegmentTypes segmentTypes = (SegmentTypes) o;
-      return Objects.equals(components, segmentTypes.components);
+      DimensionTypes dimensionTypes = (DimensionTypes) o;
+      return Objects.equals(components, dimensionTypes.components);
     }
 
     @Override
@@ -239,12 +240,12 @@ public class MultiEnvTestEngine implements TestEngine {
   private static void putTestIntoParent(
       TestDescriptor test,
       TestDescriptor parent,
-      String environmentNames,
+      String currentDimensionValues,
       EngineDiscoveryRequest discoveryRequest) {
     JupiterConfiguration nodeConfiguration =
         new CachingJupiterConfiguration(
             new MultiEnvJupiterConfiguration(
-                discoveryRequest.getConfigurationParameters(), environmentNames));
+                discoveryRequest.getConfigurationParameters(), currentDimensionValues));
 
     parent.addChild(nodeWithIdAsChildOf(test, parent.getUniqueId(), nodeConfiguration));
   }
